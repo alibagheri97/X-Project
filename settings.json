@@ -1,5 +1,7 @@
 {
     "host":"test.dastresan.net",
+    "serverIp": "167.235.150.114",
+    "serverPort": "1112",
     "ip":"188.114.96.3",
     "port":"8080",
     "ipCountDefult": "2"
