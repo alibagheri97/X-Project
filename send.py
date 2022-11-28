@@ -48,7 +48,7 @@ import json
 dic = json.load(open("settings.json", "r"))
 
 hostName = dic["serverIp"]
-serverPort = dic["serverPort"]
+serverPort = int(dic["serverPort"])
 
 
 class Value:
