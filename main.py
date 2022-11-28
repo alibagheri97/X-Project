@@ -12,7 +12,7 @@ from datetime import datetime
 def addClient(clientName, clientIpCount, expTime, ssh=False):
     dic = json.load(open("settings.json", "r"))
     host, ip, port = dic["host"], dic["ip"], dic["port"]
-
+    
     def dateTransfer(date):
         pass
 
@@ -90,106 +90,110 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
             outs.append([sqls[i], inputs[i]])
         return outs, Uuid, remark
 
-    tA = time.time()
-    if ssh:
-        tD = time.time()
+    vlessK = open("vlessKeys.txt", "r").read()
+    if not clientName in vlessK:
+        tA = time.time()
+        if ssh:
+            tD = time.time()
 
-        print("connecting to ssh server...\n")
+            print("connecting to ssh server...\n")
 
-        ssh_client = paramiko.SSHClient()
-        ssh_client.load_system_host_keys()
-        ssh_client.connect()  # )
-        time.sleep(1)
+            ssh_client = paramiko.SSHClient()
+            ssh_client.load_system_host_keys()
+            ssh_client.connect()  # )
+            time.sleep(1)
 
-        print("Server connected Secsussfully...\n")
-        print("Start download db...\n")
+            print("Server connected Secsussfully...\n")
+            print("Start download db...\n")
 
-        download()
+            download()
 
-        ssh_client.close()
-        print("download Secsusseful!!\n")
-        print(f"Donwload Time: {time.time() - tD}s\n")
-        creatBackup()
-        dbfile = "x-ui.db"
-    else:
-        # creating file path
-        dbfile = "/etc/x-ui/x-ui.db"
+            ssh_client.close()
+            print("download Secsusseful!!\n")
+            print(f"Donwload Time: {time.time() - tD}s\n")
+            creatBackup()
+            dbfile = "x-ui.db"
+        else:
+            # creating file path
+            dbfile = "/etc/x-ui/x-ui.db"
 
-    try:
-        file_size = os.path.getsize(dbfile)
-    except:
-        dbfile = "x-ui.db"
-        file_size = os.path.getsize(dbfile)
+        try:
+            file_size = os.path.getsize(dbfile)
+        except:
+            dbfile = "x-ui.db"
+            file_size = os.path.getsize(dbfile)
 
-    if file_size != 0:
-        # Create a SQL connection to our SQLite database
-        print("connecting to db...\n")
-        con = sqlite3.connect(dbfile)
-        print("connect to db Secsusseful!!\n")
-
-        # creating cursor
-        cur = con.cursor()
-
-        table_list = [a for a in cur.execute("SELECT * FROM sqlite_master WHERE type = 'table'")]
-        tables_name = []
-        for i in range(table_list.__len__()):
-            tables_name.append(table_list[i][1])
-
-        tables_name = [tables_name[1], tables_name[4]]
-        t1 = ['id', 'user_id', 'up', 'down', 'total', 'remark', 'enable', 'expiry_time', 'listen', 'port', 'protocol',
-              'settings', 'stream_settings', 'tag', 'sniffing']
-        t7 = ['id', 'inbound_id', 'enable', 'email', 'up', 'down', 'expiry_time', 'total']
-        sql_list = []
-        sql_tc = [t1, t7]
-        for i in range(len(tables_name)):
-            tcc = ""
-            for j in range(len(sql_tc[i])):
-                tcc += str(sql_tc[i][j]) + ","
-            vtc = "?," * len(sql_tc[i])
-            sql_list.append(f"""INSERT OR REPLACE INTO {tables_name[i]}({tcc[:-1]}) VALUES({vtc[:-1]});""")
-
-        print("adding Client...\n")
-        outs, Uuid, remark = addIp(clientName, clientIpCount, expTime, sql_list, cur)
-        for i in range(len(outs)):
-            cur.execute(outs[i][0], outs[i][1])
-            con.commit()
-        cur.close()
-        con.close()
-        file_size = os.path.getsize(dbfile)
         if file_size != 0:
-            if ssh:
-                print("Uploading db...\n")
-                tU = time.time()
-                ssh_client = paramiko.SSHClient()
-                ssh_client.load_system_host_keys()
-                ssh_client.connect()  # )
-                time.sleep(1)
-                ftp_client = ssh_client.open_sftp()
-                time.sleep(1)
-                file = "x-ui.db"
-                destenation = "/etc/x-ui/x-ui.db"
-                ftp_client.put(file, destenation)
-                ftp_client.close()
-                ssh_client.close()
-                print("Upload db Sucsessfull!!\n")
-                print(f"Uploading time: {time.time() - tU}s\n")
+            # Create a SQL connection to our SQLite database
+            print("connecting to db...\n")
+            con = sqlite3.connect(dbfile)
+            print("connect to db Secsusseful!!\n")
+
+            # creating cursor
+            cur = con.cursor()
+
+            table_list = [a for a in cur.execute("SELECT * FROM sqlite_master WHERE type = 'table'")]
+            tables_name = []
+            for i in range(table_list.__len__()):
+                tables_name.append(table_list[i][1])
+
+            tables_name = [tables_name[1], tables_name[4]]
+            t1 = ['id', 'user_id', 'up', 'down', 'total', 'remark', 'enable', 'expiry_time', 'listen', 'port', 'protocol',
+                  'settings', 'stream_settings', 'tag', 'sniffing']
+            t7 = ['id', 'inbound_id', 'enable', 'email', 'up', 'down', 'expiry_time', 'total']
+            sql_list = []
+            sql_tc = [t1, t7]
+            for i in range(len(tables_name)):
+                tcc = ""
+                for j in range(len(sql_tc[i])):
+                    tcc += str(sql_tc[i][j]) + ","
+                vtc = "?," * len(sql_tc[i])
+                sql_list.append(f"""INSERT OR REPLACE INTO {tables_name[i]}({tcc[:-1]}) VALUES({vtc[:-1]});""")
+
+            print("adding Client...\n")
+            outs, Uuid, remark = addIp(clientName, clientIpCount, expTime, sql_list, cur)
+            for i in range(len(outs)):
+                cur.execute(outs[i][0], outs[i][1])
+                con.commit()
+            cur.close()
+            con.close()
+            file_size = os.path.getsize(dbfile)
+            if file_size != 0:
+                if ssh:
+                    print("Uploading db...\n")
+                    tU = time.time()
+                    ssh_client = paramiko.SSHClient()
+                    ssh_client.load_system_host_keys()
+                    ssh_client.connect()  # )
+                    time.sleep(1)
+                    ftp_client = ssh_client.open_sftp()
+                    time.sleep(1)
+                    file = "x-ui.db"
+                    destenation = "/etc/x-ui/x-ui.db"
+                    ftp_client.put(file, destenation)
+                    ftp_client.close()
+                    ssh_client.close()
+                    print("Upload db Sucsessfull!!\n")
+                    print(f"Uploading time: {time.time() - tU}s\n")
+                else:
+                    pass
+                vlessKey = f"vless://{Uuid}@{ip}:{port}?type=ws&security=none&path=%2F&host={host}#{remark}"
+                vless = open("vlessKeys.txt", "a")
+                vless.write(vlessKey + "\n")
+                vless.close()
+                print("Everything Done!!\n")
             else:
-                pass
-            vlessKey = f"vless://{Uuid}@{ip}:{port}?type=ws&security=none&path=%2F&host={host}#{remark}"
-            vless = open("vlessKeys.txt", "a")
-            vless.write(vlessKey + "\n")
-            vless.close()
-            print("Everything Done!!\n")
+                raise RuntimeError("File Size is 0")
+            print(f"Script Time : {time.time() - tA}s")
+
+            print("adding Client Sucsessfull!!\n")
+            print("Vless Key: " + vlessKey)
         else:
             raise RuntimeError("File Size is 0")
-        print(f"Script Time : {time.time() - tA}s")
-
-        print("adding Client Sucsessfull!!\n")
-        print("Vless Key: " + vlessKey)
+        return vlessKey
     else:
-        raise RuntimeError("File Size is 0")
-    return vlessKey
-
+        return ""
+    
 
 def getDetected(parts):
     dic = json.load(open("settings.json", "r"))
