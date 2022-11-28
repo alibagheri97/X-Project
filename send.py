@@ -42,9 +42,13 @@ from sup import sup
 
 from main import addClient, getDetected
 
-hostName = "localhost"
+import json
 
-serverPort = 1112
+
+dic = json.load(open("settings.json", "r"))
+
+hostName = dic["serverIp"]
+serverPort = dic["serverPort"]
 
 
 class Value:
