@@ -3,7 +3,8 @@
 cur_dir=$(pwd)
 
 sudo /bin/python3 insert.py &
-sudo cp test.service /etc/systemd/system/
+sleep 2
+sudo cp test2.service /etc/systemd/system/test.service
 echo "Service Replaced!!"
 
 sudo systemctl daemon-reload
