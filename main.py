@@ -68,7 +68,7 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
 
         inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
         inbnd_json = inbnd_list[0][11]
-        inbnd_dict = json.loads(inbnd_json)['clients']  # for read
+        #inbnd_dict = json.loads(inbnd_json)['clients']  # for read
         lst = findE(inbnd_json, "]")[0:-1]
         cors = lst[inbnd_id - 1]
         Uuid = str(uuid.uuid1())
