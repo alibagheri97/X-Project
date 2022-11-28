@@ -7,6 +7,6 @@ file.close()
 lst = sup(val, "$")
 cwd = os.getcwd() + "/"
 final = lst[0] + cwd + lst[1] + cwd + lst[-1]
-file = open("test.service", "w")
+file = open("test2.service", "w")
 file.write(final)
 file.close()
