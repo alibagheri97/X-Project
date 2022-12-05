@@ -1,12 +1,8 @@
 from sup import sup
 import os
-    
-file = open("test.service", "r")
-val = file.read()
-file.close()
-lst = sup(val, "$")
+
 cwd = os.getcwd() + "/"
-final = lst[0] + cwd + lst[1] + cwd + lst[-1]
+final = f"[Unit]\nDescription=My test service\nAfter=multi-user.target\n\n[Service]\nType=simple\nRestart=always\nWorkingDirectory={cwd}\nExecStart=/usr/bin/python3 {cwd}send.py\n\n[Install]\nWantedBy=multi-user.target"
 file = open("test.service", "w")
 file.write(final)
 file.close()
