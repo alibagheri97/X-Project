@@ -1,58 +1,99 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-
 import copy
-
 import datetime
-
 import email.utils
-
 import html
-
 import http.client
-
 import io
-
 import mimetypes
-
 import os
-
 import posixpath
-
 import select
-
 import shutil
-
 import socket  # For gethostbyaddr()
-
 import socketserver
-
 import sys
-
 import time
-
 import urllib.parse
-
 import contextlib
-
 from functools import partial
-
 from http import HTTPStatus
-
-from sup import sup
-
-from main import addClient, getDetected
-
+from main import addClient, getDetected, getInboundsCount
 import json
-
-
-dic = json.load(open("settings.json", "r"))
-
-hostName = dic["serverIp"]
-serverPort = int(dic["serverPort"])
+import qrcode
+from sup import *
+from sup import pickTag
 
 
 class Value:
+    dic = dict()
     key = ""
+    go = "login.html"
+
+
+def defultPage():
+    inbndDf = int(Value.dic["inbndDefult"])
+    htm = read("indexInit.html")
+    inbnd_count = getInboundsCount()
+    htm2 = read("assets/js/themeRaw.js")
+    loc = findElement(htm2, "$")[-1]
+    bgA = "rgb(78,115, 223)"
+    colA = "rgb(255,255, 255)"
+    bgD = "rgb(234,234,234)"
+    colD = "rgb(72,65,65)"
+    js = ""
+    for i in list(range(inbnd_count))[::-1]:
+        if i + 1 == inbndDf:
+            val = ""
+            if not i == 0:
+                val = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;margin-left: 10px;background: {bgA};color: {colA};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+            else:
+                val = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;background: {bgA};color: {colA};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+            htm = insert2Tag(htm, 'name="inbndButtons"', val)
+        else:
+            val2 = ""
+            if not i == 0:
+                val2 = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;margin-left: 10px;background: {bgD};color: {colD};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+            else:
+                val2 = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;background: {bgD};color: {colD};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+            htm = insert2Tag(htm, 'name="inbndButtons"', val2)
+    for i in range(inbnd_count):
+        js += f"\n    if (id == '{i + 1}')" + "{\n    " + f"document.getElementById('inbound').value = '{i + 1}';\n    "
+        for j in range(inbnd_count):
+            if j == i:
+                js += f"document.getElementById('bt{j + 1}').style.background = '{bgA}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colA}';\n    "
+            else:
+                js += f"document.getElementById('bt{j + 1}').style.background = '{bgD}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colD}';\n    "
+        js += "}"
+    htm = tagChange(htm, 'name="ipc"', "max", int(Value.dic["maxIpDefult"]))
+    htm = tagChange(htm, 'name="ipc"', "value=", int(Value.dic["ipCountDefult"]))
+    write("assets/js/theme.js", htm2[:loc[0] + 2] + js + "\n }")
+    write("indexRaw.html", htm)
+
+
+def write(fname, content):
+    file = open(fname, "w")
+    byt = file.write(content)
+    file.close()
+
+
+def read(fname):
+    file = open(fname, "r")
+    f = file.read()
+    file.close()
+    return f
+
+
+def makeQr(key):
+    img = qrcode.make(key)
+    img.save('qr.jpg')
+
+
+write("indexRaw.html", read("indexInit.html"))
+Value.dic = json.load(open("settings.json", "r"))
+
+hostName = Value.dic["panelIp"]
+serverPort = int(Value.dic["panelPort"])
 
 
 class MyServer(BaseHTTPRequestHandler):
@@ -84,12 +125,12 @@ class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
 
         """Serve a GET request."""
-        file = open("indexRaw.html", "r")
-        htm = file.read()
-        file.close()
-        file = open("index.html", "w")
-        file.write(htm)
-        file.close()
+        # file = open("indexRaw.html", "r")
+        # htm = file.read()
+        # file.close()
+        # file = open("index.html", "w")
+        # file.write(htm)
+        # file.close()
 
         f = self.send_head()
 
@@ -133,7 +174,6 @@ class MyServer(BaseHTTPRequestHandler):
 
 
         """
-
         path = self.translate_path(self.path)
 
         f = None
@@ -185,42 +225,61 @@ class MyServer(BaseHTTPRequestHandler):
             #
             # print(f"4: {parts[4]}")
 
-            file = open("indexRaw.html", "r")
-            htm = file.read()
-            file.close()
-            file = open("index.html", "w")
-            file.write(htm)
-            file.close()
-
+            # file = open("indexRaw.html", "r")
+            # htm = file.read()
+            # file.close()
+            # file = open("index.html", "w")
+            # file.write(htm)
+            # file.close()
             dic = getDetected(parts[3])
             if dic not in [None, dict()]:
-                print("ready\n")
+                if "usr" in list(dic.keys()):
+                    if dic["usr"] == Value.dic["panelUsr"] and dic["pass"] == Value.dic["panelPass"]:
+                        Value.go = "index.html"
+                        defultPage()
+                        write("index.html", read("indexRaw.html"))
+                else:
+                    vlessK = open("vlessKeys.txt", "r").read()
+                    if not dic["remark"] in vlessK:
+                        print("ready\n")
+                        Value.key = addClient(dic["remark"], dic["ipc"], dic["date"], dic["tgb"], dic["inbnd"])
+                        print(f"{Value.key}\n")
+                    else:
+                        Value.key = ""
+                    # defultPage()
+                    # read index
 
-                Value.key = addClient(dic["remark"], dic["ipcount"], dic["date"])
-                print(f"{Value.key}\n")
-                file = open("indexRaw.html", "r")
-                htm = file.read()
-                file.close()
-                lst = sup(htm, "$")
-                htmFinal = lst[0] + lst[1][0:9] + Value.key + lst[1][9:] + lst[2]
-                file = open("index.html", "w")
-                file.write(htmFinal)
-                file.close()
-                print(f"Write Done!!\n")
+                    defultPage()
+                    htm = read("indexRaw.html")
 
-            for index in "index.html", "index.htm":
+                    if Value.key != "":
+                        # make Qr
+                        makeQr(Value.key)
+                        # do changes
+                        htm = tagChange(htm, 'name="qrcode"', "style", "Visibility: visible;width: 166px;")
+                        htm = tagChange(htm, 'name="txtQr"', "value", Value.key)
+                        htm = add2Tag(htm, 'name="qrcode"', "src", "qr.jpg")
+                        # save changes
+                    write("index.html", htm)
+
+                    # save informations
+                    info = read("Info.json")
+                    if info.__len__() != 4:
+                        write("Info.json", info[
+                                           0:-2] + "," + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
+                    else:
+                        write("Info.json", info[
+                                           0:-3] + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
+                    print(f"Write Done!!\n")
+            for index in Value.go, Value.go[:-1]:
 
                 index = os.path.join(path, index)
 
                 if os.path.exists(index):
                     path = index
-
                     break
-
             else:
-
                 return self.list_directory(path)
-
         ctype = self.guess_type(path)
 
         # check for trailing "/" which should return 404. See Issue17324
@@ -569,9 +628,8 @@ class MyServer(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-
+    write("indexRaw.html", read("indexInit.html"))
     webServer = HTTPServer((hostName, serverPort), MyServer)
-
     print(f"Server started http://{hostName}:{serverPort}/")
 
     try:
@@ -579,19 +637,20 @@ if __name__ == "__main__":
         webServer.serve_forever()
 
     except KeyboardInterrupt:
-        file = open("indexRaw.html", "r")
-        htm = file.read()
-        file.close()
-        file = open("index.html", "w")
-        file.write(htm)
-        file.close()
+        # file = open("indexRaw.html", "r")
+        # htm = file.read()
+        # file.close()
+        # file = open("index.html", "w")
+        # file.write(htm)
+        # file.close()
         pass
 
     webServer.server_close()
-    file = open("indexRaw.html", "r")
-    htm = file.read()
-    file.close()
-    file = open("index.html", "w")
-    file.write(htm)
-    file.close()
+    # file = open("indexRaw.html", "r")
+    # htm = file.read()
+    # file.close()
+    # file = open("index.html", "w")
+    # file.write(htm)
+    # file.close()
     print("server stopped.")
+

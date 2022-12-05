@@ -1,107 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<title>Dastresan Team</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-<!--===============================================================================================-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dastresan Team</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Acme&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alatsi&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+JP&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/css/Multiple-Input-Select-Pills.css">
 </head>
-<body>
-	
-	<div class="limiter">
-		<div class="container-login100">
-			<div class="wrap-login100">
-				<form class="login100-form validate-form">
-					<span class="login100-form-title">
-						VLEES Key Generator
-					</span>
-				<br>
-				<br>
 
-					<div class="wrap-input100 validate-input"">
-						<input class="input100" type="text" name="remark" placeholder="Remark">
-						<span class="focus-input100"></span>
-						<span class="symbol-input100">
-							<i class="fa fa-keyboard-o" aria-hidden="true"></i>
-						</span>
-					</div>
-
-					<div class="wrap-input100 validate-input" >
-						<input class="input100" type="text" name="ipcount" placeholder="Ip Count">
-						<span class="focus-input100"></span>
-						<span class="symbol-input100">
-							<i class="fa fa-sitemap" aria-hidden="true"></i>
-						</span>
-					</div>
-					<div  class="exlabel">
-						<label for="date">  Expire time :</label></div>
-					<div class="exinput">
-						<input type="date" id="date" name="date">
-					</div>
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" onclick="generateB()">
-							Generate
-						</button>
-					</div>
-					<br>
-					<br>
-					<br>
-					<div  class="exlabel2">
-						<label for="date">Output:</label></div>
-
-					<br>
-					<div class="devcls">
-						<input class="input1001" type="text" id="output$" value="" placeholder="" readonly>
-						</span>
-					</div>
-					<br>
-					<div class="cpbtn">
-						<button type="button" class="login100-form-btn2" id="btncp" onclick="myFunction()">
-							copy
-						</button>
-					</div>
-					<br>
-					<br>
-					</form>
-
-			</div>
-		</div>
-	</div>
-	
-	
-
-	
-<!--===============================================================================================-->	
-	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/bootstrap/js/popper.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-	<script src="vendor/tilt/tilt.jquery.min.js"></script>
-	<script >
-		('$.js-tilt').tilt({
-			scale: 1.1
-		})
-	</script>
-<!--===============================================================================================-->
-	<script src="js/main.js"></script>
-
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15"><i class="far fa-handshake" style="transform: rotate(-14deg);"></i></div>
+                    <div class="sidebar-brand-text mx-3"><span>Dastresan</span></div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link active" href="index.html"><i class="fas fa-plus"></i><span>Generate</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="table.html"><i class="fas fa-align-left"></i><span>Traffic Table</span></a></li>
+                </ul>
+                <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper" style="background: rgb(248, 249, 252);">
+            <div id="content">
+                <nav class="navbar navbar-light navbar-expand bg-white border rounded shadow mb-4 topbar static-top">
+                    <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
+                        <ul class="navbar-nav flex-nowrap ms-auto">
+                            <li class="nav-item dropdown no-arrow mx-1">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="badge bg-danger badge-counter"></span><i class="fas fa-bell fa-fw"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+                                        <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-primary icon-circle"><i class="fas fa-file-alt text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 12, 2019</span>
+                                                <p>A new monthly report is ready to download!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-success icon-circle"><i class="fas fa-donate text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 7, 2019</span>
+                                                <p>$290.29 has been deposited into your account!</p>
+                                            </div>
+                                        </a><a class="dropdown-item d-flex align-items-center" href="#">
+                                            <div class="me-3">
+                                                <div class="bg-warning icon-circle"><i class="fas fa-exclamation-triangle text-white"></i></div>
+                                            </div>
+                                            <div><span class="small text-gray-500">December 2, 2019</span>
+                                                <p>Spending Alert: We've noticed unusually high spending for your account.</p>
+                                            </div>
+                                        </a><a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown no-arrow">
+                                <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Hossain Bakhtar</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpg"></a>
+                                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="#"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
+                                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <header class="d-flex justify-content-center align-items-center" style="height: 75.8438px;margin-bottom: 42px;"><span style="margin-bottom: 0px;"><br><span style="color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) ;">Vless Key Generator</span><br><br></span></header>
+                <div class="container-fluid">
+                    <div class="d-sm-flex justify-content-sm-center align-items-sm-start align-items-lg-center" style="width: 421ppxx;height: 86px;margin-bottom: 15px;">
+                        <div>
+                            <div class="d-lg-flex justify-content-lg-center align-items-lg-center" style="text-align: left;"><span style="padding-bottom: 0px;margin-bottom: 19px;">Inbound Id:</span></div>
+                            <div class="d-lg-flex justify-content-lg-center align-items-lg-center" name="inbndButtons"></div>
+                        </div>
+                    </div>
+                    <form class="text-center border rounded d-flex justify-content-center align-items-start" style="background: rgba(88,88,88,0);border-radius: 25.6px;border: 25px groove rgb(27,27,27);height: 332.391px;">
+                        <div style="margin-bottom: 12px;margin-top: 12px;">
+                            <div class="text-center d-sm-flex d-md-flex justify-content-sm-center align-items-sm-center justify-content-md-center align-items-md-center" style="margin-top: 0px;">
+                                <div class="d-flex justify-content-center align-items-center" style="margin-top: 0%;margin-bottom: 10px;">
+                                    <div class="d-flex align-items-center justify-content-sm-center justify-content-md-center" style="margin-right: 2%;width: 291px;"><input class="border rounded-pill form-control" type="text" style="margin-bottom: 0px;text-align: center;padding-bottom: 0px;padding-top: 0px;margin-top: 0px;padding-left: 0px;padding-right: 0px;margin-right: 0px;font-weight: bold;font-size: 100%;font-family: ABeeZee, sans-serif;opacity: 1;margin-left: 2%;box-shadow: 0px 0px 3px 0px;box-sizing: border-box;height: 32px;" placeholder="Remark" name="remark"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 10px;">
+                                    <div class="d-flex justify-content-center align-items-center" style="height: 100%;margin-right: 2%;margin-left: 10%;"><input class="border rounded-pill form-control d-flex justify-content-center align-items-center form-control" type="text" style="font-weight: bold;font-family: 'Open Sans', sans-serif;font-size: 80%;padding-right: 0%;padding-top: 0%;padding-bottom: 0%;padding-left: 0%;text-align: center;color: rgb(61,54,54);background: rgb(255,255,255);border-color: rgb(133,135,150);box-shadow: 0px 0px 3px rgb(133,135,150);width: 142.844px;height: 25.1875px;margin-right: 10px;" placeholder="Expire Time" onfocus="(this.type=&#39;date&#39;)" onblur="if(this.value==&#39;&#39;){this.type=&#39;text&#39;}" name="date"></div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <div class="text-end d-flex justify-content-center align-items-end"><span class="text-end d-flex d-sm-flex justify-content-center align-items-end justify-content-sm-center align-items-sm-center" style="font-size: 70%;font-weight: bold;font-family: ABeeZee, sans-serif;margin-right: 0%;margin-top: 1%;width: 24.1094px;">Ip :</span></div>
+                                            <div class="d-flex justify-content-center align-items-center"><input class="form-control d-sm-flex justify-content-sm-center align-items-sm-start" type="text" style="opacity: 1;background: transparent;border: none;margin-right: 0%;padding-right: 0px;padding-bottom: 0px;padding-top: 0px;padding-left: 0px;margin-left: 0%;font-size: 90%;text-align: left;height: 43.5781px;width: 18.4844px;" value="3" readonly=""><input class="form-range form-control d-sm-flex d-xl-flex justify-content-sm-center align-items-sm-center" type="range" style="margin: 0;padding-right: 0px;margin-right: 0%;transform: perspective(0px);background: transparent;border: none;font-size: 60%;margin-left: 0%;" value="3" min="0" max="8" step="1" name="ipc" oninput="this.previousElementSibling.value = this.value"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 10px;">
+                                <div class="d-flex justify-content-center align-items-center" style="margin-left: 3%;"><input class="border rounded-pill form-control form-control-sm d-xl-flex" type="text" style="margin-bottom: 0px;margin-right: 15px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;padding-top: 0px;text-align: center;font-size: 70%;font-weight: bold;font-family: ABeeZee, sans-serif;opacity: 1;box-shadow: 0px 0px 3px;border-color: rgb(133, 135, 150);border-top-color: rgb(133,;border-right-color: 135,;border-bottom-color: 150);border-left-color: 135,;height: 23.7969px;width: 90px;" placeholder="Total GB" name="tgb"></div>
+                                <div class="d-flex justify-content-center align-items-center" style="margin-right: 3%;"><input class="border rounded-pill form-control" type="text" style="margin-bottom: 0px;text-align: center;padding-bottom: 0px;padding-top: 0px;margin-top: 0px;padding-left: 0px;padding-right: 0px;margin-right: 0px;font-size: 70%;font-family: ABeeZee, sans-serif;font-weight: bold;letter-spacing: 0px;opacity: 1;backdrop-filter: opacity(1);box-shadow: 0px 0px 3px;height: 25.7812px;margin-left: 15px;" placeholder="Usa.dastresan.net" name="host"></div>
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 10px;">
+                                <div class="d-flex justify-content-center align-items-center" style="margin-left: 3%;margin-right: 15px;"><input class="border rounded-pill form-control form-control-sm d-xl-flex" type="text" style="margin-bottom: 0px;margin-right: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;padding-top: 0px;text-align: center;font-size: 70%;font-weight: bold;font-family: ABeeZee, sans-serif;opacity: 1;box-shadow: 0px 0px 3px;height: 16.7969px;width: 92px;" placeholder="TID" name="tid"></div>
+                                <div class="d-flex justify-content-center align-items-center" style="margin-right: 3%;"><input class="border rounded-pill form-control" type="text" style="margin-bottom: 0px;text-align: center;padding-bottom: 0px;padding-top: 0px;margin-top: 0px;padding-left: 0px;padding-right: 0px;margin-right: 0px;font-size: 70%;font-family: ABeeZee, sans-serif;font-weight: bold;letter-spacing: 0px;opacity: 1;backdrop-filter: opacity(1);box-shadow: 0px 0px 3px;height: 20.7812px;width: 131px;margin-left: 15px;" placeholder="Phone" name="phone"></div>
+                            </div>
+                            <div class="d-md-flex justify-content-md-center align-items-md-center" style="margin-bottom: 3%;">
+                                <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 0%;">
+                                    <div>
+                                        <div><input class="border rounded form-control d-flex" type="text" style="text-align: center;font-size: 100%;padding-top: 0%;padding-right: 0%;padding-bottom: 0%;padding-left: 0%;font-family: ABeeZee, sans-serif;width: 377.438px;height: 68px;font-weight: bold;" name="note" placeholder="Note">
+                                            <div><input class="form-control" type="text" id="inbound" style="height: 0px;backdrop-filter: opacity(0);background: rgba(255,255,255,0);opacity: 0;width: 0px;" name="inbnd" value="1"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-md-flex justify-content-md-center align-items-md-center" style="margin-bottom: 0%;">
+                                <div class="d-flex justify-content-center align-items-center" style="margin-bottom: 0%;"><button class="btn btn-info border rounded-pill" type="submit" style="font-family: ABeeZee, sans-serif;font-weight: bold;font-size: 70%;margin-bottom: 0%;">Generate</button></div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-sm-center align-items-sm-center">
+                        <div>
+                            <div class="d-sm-flex justify-content-sm-center align-items-sm-center"><img class="d-flex justify-content-center align-items-center" id="qrc" style="Visibility: hidden;width: 166px;" name="qrcode" onclick="myFunction()"></div>
+                            <div><input type="text" style="opacity: 0;" value="0" name="txtQr" readonly=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="bg-white sticky-footer">
+                <div class="container my-auto">
+                    <div class="text-center my-auto copyright"><span>Copyright © Ali Bagheri 2022</span></div>
+                </div>
+            </footer>
+        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/theme.js"></script>
 </body>
+
 </html>

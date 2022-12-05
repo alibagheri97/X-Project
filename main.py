@@ -1,18 +1,18 @@
 import sqlite3
 import json
 import uuid
-import paramiko
 import os
 import time
+from datetime import date
+from dateutil.relativedelta import relativedelta
 from sup import sup
-import json
 from datetime import datetime
 
 
-def addClient(clientName, clientIpCount, expTime, ssh=False):
+def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
     dic = json.load(open("settings.json", "r"))
-    host, ip, port = dic["host"], dic["ip"], dic["port"]
-    
+    host, ip, port = dic["host"], dic["hostIp"], dic["hostPort"]
+
     def dateTransfer(date):
         pass
 
@@ -47,8 +47,14 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
                 out.append(i)
         return out
 
-    def addIp(remark, ipcount, expTime, sqls, cur, inbnd_id=1):
-
+    def addIp(remark, ipcount, expTime, sqls, cur, totalGB, inbnd_id=1):
+        if totalGB != '':
+            try:
+                totalGB = str(int(int(totalGB) * 1.073741824 * 10 ** 9))
+            except:
+                pass
+        else:
+            totalGB = "0"
         if expTime != "":
             lst = sup(expTime, "-")
             dt = datetime(int(lst[0]), int(lst[1]), int(lst[-1]))
@@ -64,18 +70,17 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
         else:
             expireTrffic = expireTime
         trffic_list = [a for a in cur.execute("SELECT * FROM client_traffics")]
-        trffic = (trffic_list[-1][0] + 1, inbnd_id, 1, remark, 0, 0, expireTrffic, 0)
+        trffic = (trffic_list[-1][0] + 1, inbnd_id, 1, remark, 0, 0, expireTrffic, totalGB)
 
         inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
-        inbnd_json = inbnd_list[0][11]
-        #inbnd_dict = json.loads(inbnd_json)['clients']  # for read
+        inbnd_json = inbnd_list[inbnd_id - 1][11]
+        # inbnd_dict = json.loads(inbnd_json)['clients']  # for read
         lst = findE(inbnd_json, "]")[0:-1]
-        cors = lst[inbnd_id - 1]
+        cors = lst[0]
         Uuid = str(uuid.uuid1())
         jinput = ',\n    {\n      "id": "' + Uuid \
-                 + '",\n      "flow": "xtls-rprx-direct",\n      "email": "' + remark + '",\n      "limitIp": ' + str(
-            ipcount) \
-                 + ',\n      "totalGB": 0,\n      "expiryTime": ' + str(expireTime) + '\n    }\n'
+                 + '",\n      "flow": "xtls-rprx-direct",\n      "email": "' + remark + '",\n      "limitIp": ' + str(ipcount) \
+                 + f',\n      "totalGB": {totalGB},\n      "expiryTime": ' + str(expireTime) + '\n    }\n'
         print(jinput[1:])
         out_inbnd = inbnd_json[0:cors - 3] + jinput + inbnd_json[cors - 2:]
         inbnd = (inbnd_id, inbnd_list[inbnd_id - 1][1], inbnd_list[inbnd_id - 1][2], inbnd_list[inbnd_id - 1][3],
@@ -93,30 +98,8 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
     vlessK = open("vlessKeys.txt", "r").read()
     if not clientName in vlessK:
         tA = time.time()
-        if ssh:
-            tD = time.time()
-
-            print("connecting to ssh server...\n")
-
-            ssh_client = paramiko.SSHClient()
-            ssh_client.load_system_host_keys()
-            ssh_client.connect()  # )
-            time.sleep(1)
-
-            print("Server connected Secsussfully...\n")
-            print("Start download db...\n")
-
-            download()
-
-            ssh_client.close()
-            print("download Secsusseful!!\n")
-            print(f"Donwload Time: {time.time() - tD}s\n")
-            creatBackup()
-            dbfile = "x-ui.db"
-        else:
-            # creating file path
-            dbfile = "/etc/x-ui/x-ui.db"
-
+        
+        dbfile = "/etc/x-ui/x-ui.db"
         try:
             file_size = os.path.getsize(dbfile)
         except:
@@ -138,7 +121,8 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
                 tables_name.append(table_list[i][1])
 
             tables_name = [tables_name[1], tables_name[4]]
-            t1 = ['id', 'user_id', 'up', 'down', 'total', 'remark', 'enable', 'expiry_time', 'listen', 'port', 'protocol',
+            t1 = ['id', 'user_id', 'up', 'down', 'total', 'remark', 'enable', 'expiry_time', 'listen', 'port',
+                  'protocol',
                   'settings', 'stream_settings', 'tag', 'sniffing']
             t7 = ['id', 'inbound_id', 'enable', 'email', 'up', 'down', 'expiry_time', 'total']
             sql_list = []
@@ -151,7 +135,7 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
                 sql_list.append(f"""INSERT OR REPLACE INTO {tables_name[i]}({tcc[:-1]}) VALUES({vtc[:-1]});""")
 
             print("adding Client...\n")
-            outs, Uuid, remark = addIp(clientName, clientIpCount, expTime, sql_list, cur)
+            outs, Uuid, remark = addIp(clientName, clientIpCount, expTime, sql_list, cur, tgb, inbnd_id=int(inbndid))
             for i in range(len(outs)):
                 cur.execute(outs[i][0], outs[i][1])
                 con.commit()
@@ -159,24 +143,6 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
             con.close()
             file_size = os.path.getsize(dbfile)
             if file_size != 0:
-                if ssh:
-                    print("Uploading db...\n")
-                    tU = time.time()
-                    ssh_client = paramiko.SSHClient()
-                    ssh_client.load_system_host_keys()
-                    ssh_client.connect()  # )
-                    time.sleep(1)
-                    ftp_client = ssh_client.open_sftp()
-                    time.sleep(1)
-                    file = "x-ui.db"
-                    destenation = "/etc/x-ui/x-ui.db"
-                    ftp_client.put(file, destenation)
-                    ftp_client.close()
-                    ssh_client.close()
-                    print("Upload db Sucsessfull!!\n")
-                    print(f"Uploading time: {time.time() - tU}s\n")
-                else:
-                    pass
                 vlessKey = f"vless://{Uuid}@{ip}:{port}?type=ws&security=none&path=%2F&host={host}#{remark}"
                 vless = open("vlessKeys.txt", "a")
                 vless.write(vlessKey + "\n")
@@ -193,11 +159,10 @@ def addClient(clientName, clientIpCount, expTime, ssh=False):
         return vlessKey
     else:
         return ""
-    
+
 
 def getDetected(parts):
-    dic = json.load(open("settings.json", "r"))
-    ipCountDefult = dic["ipCountDefult"]
+    dicJ = json.load(open("settings.json", "r"))
     try:
         andsup = sup(parts, "&")
         dic = dict()
@@ -207,10 +172,25 @@ def getDetected(parts):
             if lst[0] == "remark" and lst.__len__() == 1:
                 raise RuntimeError("")
             elif lst[0] == "ipcount" and lst.__len__() == 1:
-                lst.append(ipCountDefult)
+                lst.append(dicJ["ipCountDefult"])
             elif lst[0] == "date" and lst.__len__() == 1:
+                dt = date.today() + relativedelta(months=+int(dicJ["dateDefult"]))
+                lst.append(f"{dt.year}-{dt.month}-{dt.day}")
+            elif lst.__len__() == 1:
                 lst.append("")
             dic[lst[0]] = lst[1]
         return dic
     except:
         return None
+
+
+def getInboundsCount():
+    dbfile = "x-ui.db"
+    con = sqlite3.connect(dbfile)
+    cur = con.cursor()
+    inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
+    inbnd_count = inbnd_list.__len__()
+    cur.close()
+    con.close()
+    return inbnd_count
+
