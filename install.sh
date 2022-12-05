@@ -3,6 +3,7 @@
 cur_dir=$(pwd)
 
 sudo /bin/python3 insert.py &
+sleep 3
 sudo cp test.service /etc/systemd/system/
 echo "Service Replaced!!"
 
