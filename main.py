@@ -7,7 +7,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from sup import sup
 from datetime import datetime
-
+import shutil
 
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
     dic = json.load(open("settings.json", "r"))
@@ -17,7 +17,7 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
         pass
 
     def creatBackup(file="/etc/x-ui/x-ui.db"):
-        import shutil
+
         lst = sup(time.asctime(), " ")
         name = sup(file, ".")
         tim = sup(lst[3], ":")
