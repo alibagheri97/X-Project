@@ -16,12 +16,13 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
     def dateTransfer(date):
         pass
 
-    def creatBackup(file="x-ui.db"):
+    def creatBackup(file="/etc/x-ui/x-ui.db"):
         import shutil
         lst = sup(time.asctime(), " ")
         name = sup(file, ".")
         tim = sup(lst[3], ":")
-        shutil.copy2(file, f"{name[0]} {lst[1]} {lst[2]} {tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
+        shutil.copy2(file, f"/root/sqlBackup/{name[0]} {lst[1]} {lst[2]} {tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
+
 
     def download(file="/etc/x-ui/x-ui.db", destenation="x-ui.db"):
         # downloading
@@ -136,6 +137,7 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
 
             print("adding Client...\n")
             outs, Uuid, remark = addIp(clientName, clientIpCount, expTime, sql_list, cur, tgb, inbnd_id=int(inbndid))
+            creatBackup()
             for i in range(len(outs)):
                 cur.execute(outs[i][0], outs[i][1])
                 con.commit()
