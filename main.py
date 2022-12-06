@@ -17,11 +17,11 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
         pass
 
     def creatBackup(file="/etc/x-ui/x-ui.db"):
-
         lst = sup(time.asctime(), " ")
         name = sup(file, ".")
-        tim = sup(lst[3], ":")
-        shutil.copy2(file, f"/root/sqlBackup/{name[0]} {lst[1]} {lst[2]} {tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
+        tim = sup(lst[4], ":")
+        nameSql = sup(name[0], "/")[-1]
+        shutil.copy2(file, f"/root/sqlBackup/{nameSql}-{lst[1]}-{lst[3]}-{tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
 
 
     def download(file="/etc/x-ui/x-ui.db", destenation="x-ui.db"):
