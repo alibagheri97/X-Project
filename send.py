@@ -42,29 +42,34 @@ def defultPage():
     bgD = "rgb(234,234,234)"
     colD = "rgb(72,65,65)"
     js = ""
-    for i in list(range(inbnd_count))[::-1]:
+    for i in list(range(inbnd_count.__len__()))[::-1]:
+        on = ""
+        if inbnd_count[i] == "y":
+            on = "opacity: 0.30;"
         if i + 1 == inbndDf:
             val = ""
             if not i == 0:
-                val = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;margin-left: 10px;background: {bgA};color: {colA};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+                val = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;margin-left: 10px;{on}background: {bgA};color: {colA};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
             else:
-                val = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;background: {bgA};color: {colA};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+                val = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;{on}background: {bgA};color: {colA};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
             htm = insert2Tag(htm, 'name="inbndButtons"', val)
         else:
             val2 = ""
             if not i == 0:
-                val2 = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;margin-left: 10px;background: {bgD};color: {colD};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+                val2 = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;margin-left: 10px;{on}background: {bgD};color: {colD};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
             else:
-                val2 = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;background: {bgD};color: {colD};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
+                val2 = f'<button id="bt{i + 1}" class="btn btn-primary border rounded-pill" type="button" style="width: 37.6875px;box-shadow: 0px 0px 3px;{on}background: {bgD};color: {colD};" onclick="check(' + f'{i+1}' + f')">{i + 1}</button>'
             htm = insert2Tag(htm, 'name="inbndButtons"', val2)
-    for i in range(inbnd_count):
-        js += f"\n    if (id == '{i + 1}')" + "{\n    " + f"document.getElementById('inbound').value = '{i + 1}';\n    "
-        for j in range(inbnd_count):
-            if j == i:
-                js += f"document.getElementById('bt{j + 1}').style.background = '{bgA}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colA}';\n    "
-            else:
-                js += f"document.getElementById('bt{j + 1}').style.background = '{bgD}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colD}';\n    "
-        js += "}"
+    for i in range(inbnd_count.__len__()):
+        if inbnd_count[i] == "y":
+            js += f"\n    if (id == '{i + 1}')" + "{\n    " + f"document.getElementById('inbound').value = '{i + 1}';\n    "
+            for j in range(inbnd_count.__len__()):
+                if inbnd_count[i] == "y":
+                    if j == i:
+                        js += f"document.getElementById('bt{j + 1}').style.background = '{bgA}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colA}';\n    "
+                    else:
+                        js += f"document.getElementById('bt{j + 1}').style.background = '{bgD}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colD}';\n    "
+            js += "}"
     htm = tagChange(htm, 'name="ipc"', "max", int(Value.dic["maxIpDefult"]))
     htm = tagChange(htm, 'name="ipc"', "value=", int(Value.dic["ipCountDefult"]))
     write("assets/js/theme.js", htm2[:loc[0] + 2] + js + "\n }")
