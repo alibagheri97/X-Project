@@ -192,9 +192,17 @@ def getInboundsCount():
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
     inbnd_count = inbnd_list.__len__()
+    inbnd_count_list = []
+    for i in inbnd_count:
+        inbndType = inbnd_list[i][10]
+        if inbndType == "vless":
+            inbnd_count_list.append("y")
+        else:
+            inbnd_count_list.append("n")
     cur.close()
     con.close()
-    return inbnd_count
+    return inbnd_count_list
+
 
 
 
