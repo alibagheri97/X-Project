@@ -137,6 +137,9 @@ class MyServer(BaseHTTPRequestHandler):
         # file.write(htm)
         # file.close()
         print(self.client_address[0])
+        if Value.go == "index.html":
+            defultPage()
+            write("index.html", read("indexRaw.html"))
         f = self.send_head()
 
         if f:
@@ -285,6 +288,9 @@ class MyServer(BaseHTTPRequestHandler):
                         write("Info.json", info[
                                            0:-3] + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
                     print(f"Write Done!!\n")
+            else:
+                defultPage()
+                write("index.html", read("indexRaw.html"))
             for index in Value.go, Value.go[:-1]:
 
                 index = os.path.join(path, index)
