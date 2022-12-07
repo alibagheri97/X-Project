@@ -189,9 +189,7 @@ def getDetected(parts):
 
 
 def getInboundsCount():
-    # dbfile = "/etc/x-ui/x-ui.db"
-    dbfile = "x-ui.db"
-
+    dbfile = "/etc/x-ui/x-ui.db"
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
