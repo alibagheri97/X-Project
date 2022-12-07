@@ -1,8 +1,8 @@
 {
    "host": [ 
     {
-        "De.dastresan.net": "188.114.99.7:8080",
-        "Usa.dastresan.net": "188.114.99.7:8080"
+        "De.dastresan.net": "188.114.99.7",
+        "Usa.dastresan.net": "188.114.99.7"
     }
   ],
     "panelIp": "167.235.150.114",
