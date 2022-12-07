@@ -6,7 +6,7 @@ sudo /bin/python3 insert.py &
 sleep 3
 sudo cp test.service /etc/systemd/system/
 echo "Service Replaced!!"
-
+sudo mkdir /root/sqlBackup
 sudo systemctl daemon-reload
 sudo systemctl enable test.service
 sudo systemctl start test.service
