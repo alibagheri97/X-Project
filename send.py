@@ -248,11 +248,12 @@ class MyServer(BaseHTTPRequestHandler):
                 ips = read("ip.txt")
                 clientIp = self.client_address[0]
                 if not clientIp in ips:
-                    if dic["usr"] == Value.dic["panelUsr"] and dic["pass"] == Value.dic["panelPass"]:
-                        Value.go = "index.html"
-                        write("ip.txt", clientIp+"\n")
-                        defultPage()
-                        write("index.html", read("indexRaw.html"))
+                    if "usr" in list(dic.keys()) and "pass" in list(dic.keys()):
+                        if dic["usr"] == Value.dic["panelUsr"] and dic["pass"] == Value.dic["panelPass"]:
+                            Value.go = "index.html"
+                            write("ip.txt", clientIp+"\n")
+                            defultPage()
+                            write("index.html", read("indexRaw.html"))
                 else:
                     Value.go = "index.html"
                     write("ip.txt", clientIp + "\n")
