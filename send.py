@@ -33,6 +33,7 @@ class Value:
 
 def defultPage():
     inbndDf = int(Value.dic["inbndDefult"])
+    hostName = list(Value.dic["host"][0].keys())
     htm = read("indexInit.html")
     inbnd_count = getInboundsCount()
     htm2 = read("assets/js/themeRaw.js")
@@ -42,6 +43,9 @@ def defultPage():
     bgD = "rgb(234,234,234)"
     colD = "rgb(72,65,65)"
     js = ""
+    for i in hostName:
+        val = f'<option value="{i}" selected="">{i}</option>'
+        htm = insert2Tag(htm, 'name="hosts"', val)
     for i in list(range(inbnd_count.__len__()))[::-1]:
         on = ""
         if not inbnd_count[i] == "y":
@@ -259,7 +263,7 @@ class MyServer(BaseHTTPRequestHandler):
                     vlessK = open("vlessKeys.txt", "r").read()
                     if not dic["remark"] in vlessK:
                         print("ready\n")
-                        Value.key = addClient(dic["remark"], dic["ipc"], dic["date"], dic["tgb"], dic["inbnd"])
+                        Value.key = addClient(dic["remark"], dic["ipc"], dic["date"], dic["tgb"], dic["inbnd"], dic["hosts"])
                         print(f"{Value.key}\n")
                     else:
                         Value.key = ""
