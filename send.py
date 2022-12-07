@@ -247,6 +247,12 @@ class MyServer(BaseHTTPRequestHandler):
                         defultPage()
                         write("index.html", read("indexRaw.html"))
                 else:
+                    Value.go = "index.html"
+                    write("ip.txt", clientIp + "\n")
+                    defultPage()
+                    write("index.html", read("indexRaw.html"))
+
+                if Value.go == "index.html" and "remark" in list(dic.keys()):
                     vlessK = open("vlessKeys.txt", "r").read()
                     if not dic["remark"] in vlessK:
                         print("ready\n")
@@ -254,8 +260,8 @@ class MyServer(BaseHTTPRequestHandler):
                         print(f"{Value.key}\n")
                     else:
                         Value.key = ""
-                    # defultPage()
-                    # read index
+                # defultPage()
+                # read index
 
                     defultPage()
                     htm = read("indexRaw.html")
