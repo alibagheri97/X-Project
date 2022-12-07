@@ -12,8 +12,8 @@ import shutil
 
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     dic = json.load(open("settings.json", "r"))
-    hostLst = sup(dic["host"][0][host], ":")
-    ip, port = hostLst[0], hostLst[1]
+    hostIp = dic["host"][0][host]
+    ip, port = hostIp, getInboundsPort(inbndid - 1)
 
     def dateTransfer(date):
         pass
@@ -81,7 +81,8 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
         cors = lst[0]
         Uuid = str(uuid.uuid1())
         jinput = ',\n    {\n      "id": "' + Uuid \
-                 + '",\n      "flow": "xtls-rprx-direct",\n      "email": "' + remark + '",\n      "limitIp": ' + str(ipcount) \
+                 + '",\n      "flow": "xtls-rprx-direct",\n      "email": "' + remark + '",\n      "limitIp": ' + str(
+            ipcount) \
                  + f',\n      "totalGB": {totalGB},\n      "expiryTime": ' + str(expireTime) + '\n    }\n'
         print(jinput[1:])
         out_inbnd = inbnd_json[0:cors - 3] + jinput + inbnd_json[cors - 2:]
@@ -100,7 +101,7 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     vlessK = open("vlessKeys.txt", "r").read()
     if not clientName in vlessK:
         tA = time.time()
-        
+
         dbfile = "/etc/x-ui/x-ui.db"
         try:
             file_size = os.path.getsize(dbfile)
@@ -188,7 +189,9 @@ def getDetected(parts):
 
 
 def getInboundsCount():
-    dbfile = "/etc/x-ui/x-ui.db"
+    # dbfile = "/etc/x-ui/x-ui.db"
+    dbfile = "x-ui.db"
+
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
@@ -204,3 +207,13 @@ def getInboundsCount():
     con.close()
     return inbnd_count_list
 
+
+def getInboundsPort(inbnd):
+    dbfile = "/etc/x-ui/x-ui.db"
+    con = sqlite3.connect(dbfile)
+    cur = con.cursor()
+    inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
+    inbnd_port = inbnd_list[inbnd][9]
+    cur.close()
+    con.close()
+    return inbnd_port
