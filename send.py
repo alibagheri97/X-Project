@@ -233,7 +233,15 @@ class MyServer(BaseHTTPRequestHandler):
             #
             # print(f"2: {parts[2]}")
             #
+            print(f"0: {parts[0]}")
+
+            print(f"1: {parts[1]}")
+
+            print(f"2: {parts[2]}")
+
             print(f"3: {parts[3]}")
+
+            print(f"4: {parts[4]}")
             #
             # print(f"4: {parts[4]}")
 
