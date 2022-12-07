@@ -131,7 +131,7 @@ class MyServer(BaseHTTPRequestHandler):
         # file = open("index.html", "w")
         # file.write(htm)
         # file.close()
-
+        print(self.client_address[0])
         f = self.send_head()
 
         if f:
@@ -233,9 +233,12 @@ class MyServer(BaseHTTPRequestHandler):
             # file.close()
             dic = getDetected(parts[3])
             if dic not in [None, dict()]:
-                if "usr" in list(dic.keys()):
+                ips = read("ip.txt")
+                clientIp = self.client_address[0]
+                if not clientIp in ips:
                     if dic["usr"] == Value.dic["panelUsr"] and dic["pass"] == Value.dic["panelPass"]:
                         Value.go = "index.html"
+                        write("ip.txt", clientIp+"\n")
                         defultPage()
                         write("index.html", read("indexRaw.html"))
                 else:
@@ -628,7 +631,6 @@ class MyServer(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    write("indexRaw.html", read("indexInit.html"))
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print(f"Server started http://{hostName}:{serverPort}/")
 
