@@ -279,7 +279,6 @@ class MyServer(BaseHTTPRequestHandler):
                 # defultPage()
                 # read index
 
-                    defultPage()
                     htm = read("indexRaw.html")
 
                     if Value.key != "":
@@ -291,6 +290,9 @@ class MyServer(BaseHTTPRequestHandler):
                         htm = add2Tag(htm, 'name="qrcode"', "src", "qr.jpg")
                         # save changes
                     write("index.html", htm)
+                    
+                    defultPage()
+                    write("index.html", read("indexRaw.html"))
 
                     # save informations
                     info = read("Info.json")
