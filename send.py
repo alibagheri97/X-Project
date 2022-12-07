@@ -75,7 +75,7 @@ def defultPage():
                         js += f"document.getElementById('bt{j + 1}').style.background = '{bgD}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colD}';\n    "
             js += "}"
     htm = tagChange(htm, 'name="ipc"', "max", int(Value.dic["maxIpDefult"]))
-    htm = tagChange(htm, 'name="ipc"', "value=", int(Value.dic["ipCountDefult"]))
+    htm = tagChange(htm, 'name="ipc"', "value=", int(Value.dic["ipCountDefult"]) - 1)
     write("assets/js/theme.js", htm2[:loc[0] + 2] + js + "\n }")
     write("indexRaw.html", htm)
 
