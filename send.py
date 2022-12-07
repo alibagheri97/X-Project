@@ -44,7 +44,7 @@ def defultPage():
     js = ""
     for i in list(range(inbnd_count.__len__()))[::-1]:
         on = ""
-        if inbnd_count[i] == "y":
+        if not inbnd_count[i] == "y":
             on = "opacity: 0.30;"
         if i + 1 == inbndDf:
             val = ""
