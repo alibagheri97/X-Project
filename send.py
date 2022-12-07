@@ -660,15 +660,14 @@ if __name__ == "__main__":
 
         webServer.serve_forever()
 
-    except KeyboardInterrupt:
+    except:
         # file = open("indexRaw.html", "r")
         # htm = file.read()
         # file.close()
         # file = open("index.html", "w")
         # file.write(htm)
         # file.close()
-        pass
-
+        webServer.server_close()
     webServer.server_close()
     # file = open("indexRaw.html", "r")
     # htm = file.read()
