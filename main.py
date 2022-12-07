@@ -9,9 +9,11 @@ from sup import sup
 from datetime import datetime
 import shutil
 
-def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
+
+def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     dic = json.load(open("settings.json", "r"))
-    host, ip, port = dic["host"], dic["hostIp"], dic["hostPort"]
+    hostLst = sup(dic["host"][0][host], ":")
+    ip, port = hostLst[0], hostLst[1]
 
     def dateTransfer(date):
         pass
@@ -22,7 +24,6 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid):
         tim = sup(lst[4], ":")
         nameSql = sup(name[0], "/")[-1]
         shutil.copy2(file, f"/root/sqlBackup/{nameSql}-{lst[1]}-{lst[3]}-{tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
-
 
     def download(file="/etc/x-ui/x-ui.db", destenation="x-ui.db"):
         # downloading
@@ -202,7 +203,4 @@ def getInboundsCount():
     cur.close()
     con.close()
     return inbnd_count_list
-
-
-
 
