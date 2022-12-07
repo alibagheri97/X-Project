@@ -13,7 +13,7 @@ import shutil
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     dic = json.load(open("settings.json", "r"))
     hostIp = dic["host"][0][host]
-    ip, port = hostIp, getInboundsPort(inbndid - 1)
+    ip, port = hostIp, getInboundsPort(int(inbndid) - 1)
 
     def dateTransfer(date):
         pass
@@ -189,7 +189,9 @@ def getDetected(parts):
 
 
 def getInboundsCount():
-    dbfile = "/etc/x-ui/x-ui.db"
+    # dbfile = "/etc/x-ui/x-ui.db"
+    dbfile = "x-ui.db"
+
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
