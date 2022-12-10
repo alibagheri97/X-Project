@@ -21,9 +21,17 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     def creatBackup(file=Value.path):
         lst = sup(time.asctime(), " ")
         name = sup(file, ".")
-        tim = sup(lst[4], ":")
+        for i in lst:
+            if i.count(":") == 2:
+                tim = sup(i, ":")
+                break
+        for i in lst[1:]:
+            if i.__len__()==2:
+                day = i
+            elif i.__len__()==3:
+                month = i
         nameSql = sup(name[0], "/")[-1]
-        shutil.copy2(file, f"/root/sqlBackup/{nameSql}-{lst[1]}-{lst[3]}-{tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
+        shutil.copy2(file, f"/root/sqlBackup/{nameSql}-{month}-{day}-{tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
 
     def com(cmd):
         stdin, stdout, stderr = ssh_client.exec_command(cmd)
