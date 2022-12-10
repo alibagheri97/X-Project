@@ -2,8 +2,7 @@
 
 cur_dir=$(pwd)
 
-sudo /bin/python3 insert.py &
-sleep 3
+apt install python3-pip && sudo /bin/python3 insert.py && sleep 2
 sudo cp test.service /etc/systemd/system/
 echo "Service Replaced!!"
 sudo mkdir /root/sqlBackup
