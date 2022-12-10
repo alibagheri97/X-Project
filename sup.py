@@ -1,3 +1,9 @@
+class Value:
+    dic = dict()
+    key = ""
+    go = ""
+    path = "/etc/x-ui/x-ui.db"
+
 def sup(data, by):
     a = 0
     b = 0
@@ -36,6 +42,8 @@ def tagChange(data, id, element, value):
         else:
             loc[1] = tg[1][1]
         realoc = [loc[0] + tag[1][0], loc[1] + tag[1][0]]
+        if "=" in element:
+            element = sup(element, "=")[0]
         return data[:realoc[0]] + f'{element}="{value}"' + data[realoc[1]:]
     else:
         return None
@@ -166,4 +174,3 @@ def pickTag(data, id, symbol=("<", ">"), mode="all"):
                 return data[first:first + firstSymbol.__len__()], (first - 1, first + firstSymbol.__len__() - 1)
         else:
             return None, None
-
