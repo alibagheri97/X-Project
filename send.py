@@ -67,6 +67,7 @@ def inboundSetup(htm):
                         js += f"document.getElementById('bt{j + 1}').style.background = '{bgD}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colD}';\n    "
             js += "}"
     write("assets/js/theme.js", htm2[:loc[0] + 2] + js + "\n }")
+    htm = tagChange(htm, 'name="inbnd"', "value", inbndDf)
     return htm
 
 
