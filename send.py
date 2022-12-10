@@ -211,8 +211,6 @@ class MyServer(BaseHTTPRequestHandler):
                                 setIndex()
                             else:
                                 pass
-                    else:
-                        pass
 
                 elif Value.go == "index.html":
                     if "remark" in list(dic.keys()):
@@ -241,9 +239,11 @@ class MyServer(BaseHTTPRequestHandler):
                             intialSetup()
                             setIndex()
                     else:
-                        pass
+                        intialSetup()
+                        setIndex()
             else:
-                pass
+                intialSetup()
+                setIndex()
 
             checkIp(self.client_address[0])
             for index in Value.go, Value.go[:-1]:
