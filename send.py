@@ -25,16 +25,9 @@ from sup import *
 from sup import pickTag
 
 
-class Value:
-    dic = dict()
-    key = ""
-    go = "login.html"
-
-
-def inboundSetup():
+def inboundSetup(htm):
     inbndDf = int(Value.dic["inbndDefult"])
     hostName = list(Value.dic["host"][0].keys())
-    htm = read("indexInit.html")
     inbnd_count = getInboundsCount()
     htm2 = read("assets/js/themeRaw.js")
     loc = findElement(htm2, "$")[-1]
@@ -75,19 +68,22 @@ def inboundSetup():
                         js += f"document.getElementById('bt{j + 1}').style.background = '{bgD}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colD}';\n    "
             js += "}"
     write("assets/js/theme.js", htm2[:loc[0] + 2] + js + "\n }")
-    write("indexRaw.html", htm)
+    return htm
 
 
-def ipcountSetup():
-    htm = read("indexInit.html")
+def ipcountSetup(htm):
     htm = tagChange(htm, 'name="ipc"', "max", int(Value.dic["maxIpDefult"]))
     htm = tagChange(htm, 'name="ipc"', "value=", int(Value.dic["ipCountDefult"]))
-    write("indexRaw.html", htm)
+    htm = tagChange(htm, 'name="ipcText"', "value=", int(Value.dic["ipCountDefult"]))
+    return htm
 
 
 def intialSetup():
-    inboundSetup()
-    ipcountSetup()
+    Value.dic = json.load(open("settings.json", "r"))
+    htm = read("indexInit.html")
+    htm = ipcountSetup(htm)
+    htm = inboundSetup(htm)
+    write("indexRaw.html", htm)
 
 
 def write(fname, content):
@@ -120,6 +116,18 @@ def setQrcode():
     write("index.html", htm)
 
 
+def checkIp(clientIp):
+    ips = read("ip.txt")
+    if clientIp in ips:
+        Value.go = "index.html"
+    else:
+        Value.go = "login.html"
+
+
+# def checkRequest(path):
+#     pass
+
+
 # write("indexRaw.html", read("indexInit.html"))
 Value.dic = json.load(open("settings.json", "r"))
 
@@ -133,7 +141,6 @@ def setIndex():
 
 class MyServer(BaseHTTPRequestHandler):
     __version__ = "0.6"
-
     server_version = "SimpleHTTP/" + __version__
 
     extensions_map = _encodings_map_default = {
@@ -159,8 +166,6 @@ class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
 
         """Serve a GET request."""
-
-        print(self.client_address[0])
         f = self.send_head()
 
         if f:
@@ -176,7 +181,6 @@ class MyServer(BaseHTTPRequestHandler):
     def do_HEAD(self):
 
         """Serve a HEAD request."""
-
         f = self.send_head()
 
         if f:
@@ -184,135 +188,65 @@ class MyServer(BaseHTTPRequestHandler):
 
     def send_head(self):
 
-        """Common code for GET and HEAD commands.
-
-
-
-        This sends the response code and MIME headers.
-
-
-
-        Return value is either a file object (which has to be copied
-
-        to the outputfile by the caller unless the command was HEAD,
-
-        and must be closed by the caller under all circumstances), or
-
-        None, in which case the caller has nothing further to do.
-
-
-
-        """
-        path = self.translate_path(self.path)
+        path = self.path
+        path = self.translate_path(path)
 
         f = None
 
         if os.path.isdir(path):
 
             parts = urllib.parse.urlsplit(self.path)
+            new_parts = (parts[0], parts[1], parts[2] + '/', parts[3], parts[4])
 
-            # if not parts.path.endswith('/'):
-            #     # redirect browser - doing basically what apache does
-            #
-            #     self.send_response(HTTPStatus.MOVED_PERMANENTLY)
-            #
-            #     new_parts = (parts[0], parts[1], parts[2] + '/',
-            #
-            #                  parts[3], parts[4])
-            #
-            #     print(f"0: {parts[0]}")
-            #
-            #     print(f"1: {parts[1]}")
-            #
-            #     print(f"2: {parts[2]}")
-            #
-            #     print(f"3: {parts[3]}")
-            #
-            #     print(f"4: {parts[4]}")
-            #
-            #     new_url = urllib.parse.urlunsplit(new_parts)
-            #
-            #     self.send_header("Location", new_url)
-            #
-            #     self.send_header("Content-Length", "0")
-            #
-            #     self.end_headers()
-            #
-            #     return None
-
-            new_parts = (parts[0], parts[1], parts[2] + '/',
-
-                         parts[3], parts[4])
-
-            # print(f"0: {parts[0]}")
-            #
-            # print(f"1: {parts[1]}")
-            #
-            # print(f"2: {parts[2]}")
-            #
-            print(f"0: {parts[0]}")
-
-            print(f"1: {parts[1]}")
-
-            print(f"2: {parts[2]}")
-
-            print(f"3: {parts[3]}")
-
-            print(f"4: {parts[4]}")
-            #
-            # print(f"4: {parts[4]}")
-
-            # file = open("indexRaw.html", "r")
-            # htm = file.read()
-            # file.close()
-            # file = open("index.html", "w")
-            # file.write(htm)
-            # file.close()
             dic = getDetected(parts[3])
             if dic not in [None, dict()]:
                 ips = read("ip.txt")
                 clientIp = self.client_address[0]
-                if "usr" in list(dic.keys()):
-                    if "pass" in list(dic.keys()):
-                        if not clientIp in ips:
+                if Value.go == "login.html":
+                    if "usr" in list(dic.keys()):
+                        if "pass" in list(dic.keys()):
                             if dic["usr"] == Value.dic["panelUsr"] and dic["pass"] == Value.dic["panelPass"]:
-                                Value.go = "index.html"
                                 write("ip.txt", clientIp + "\n")
                                 intialSetup()
                                 setIndex()
-                        else:
-                            Value.go = "index.html"
-                elif "remark" in list(dic.keys()):
-                    if Value.go == "index.html":
+                            else:
+                                pass
+                    else:
+                        pass
+
+                elif Value.go == "index.html":
+                    if "remark" in list(dic.keys()):
                         vlessK = open("vlessKeys.txt", "r").read()
-                        if not dic["remark"] in vlessK:
+
+                        if not dic["remark"] in vlessK and dic["remark"] != "":
                             print("ready\n")
                             Value.key = addClient(dic["remark"], dic["ipc"], dic["date"], dic["tgb"], dic["inbnd"],
                                                   dic["hosts"])
                             print(f"{Value.key}\n")
                         else:
                             Value.key = ""
-                        # defultPage()
-                        # read index
 
                         if Value.key != "":
                             setQrcode()
+                            # save informations
+                            info = read("Info.json")
+                            if info.__len__() != 4:
+                                write("Info.json", info[
+                                                   0:-2] + "," + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
+                            else:
+                                write("Info.json", info[
+                                                   0:-3] + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
+                            print(f"Write Done!!\n")
+
                         else:
                             intialSetup()
                             setIndex()
-
-                        # save informations
-                        info = read("Info.json")
-                        if info.__len__() != 4:
-                            write("Info.json", info[
-                                               0:-2] + "," + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
-                        else:
-                            write("Info.json", info[
-                                               0:-3] + "\n   " + f'"{dic["remark"]}": [\n    ' + "{\n      " + f'"Telegram ID": "{dic["tid"]}",\n      ' + f'"Phone": "{dic["phone"]}",\n      ' + f'"Note": "{dic["note"]}"\n    ' + "}\n  ]\n}")
-                        print(f"Write Done!!\n")
+                    else:
+                        pass
             else:
-                intialSetup()
-                setIndex()
+                pass
+
+            checkIp(self.client_address[0])
             for index in Value.go, Value.go[:-1]:
 
                 index = os.path.join(path, index)
@@ -322,18 +256,7 @@ class MyServer(BaseHTTPRequestHandler):
                     break
             else:
                 pass
-                # return self.list_directory(path)
         ctype = self.guess_type(path)
-
-        # check for trailing "/" which should return 404. See Issue17324
-
-        # The test for this was added in test_httpserver.py
-
-        # However, some OS platforms accept a trailingSlash as a filename
-
-        # See discussion on python-dev and Issue34711 regarding
-
-        # parseing and rejection of filenames with a trailing slash
 
         if path.endswith("/"):
             self.send_error(HTTPStatus.NOT_FOUND, "File not found")
@@ -425,20 +348,6 @@ class MyServer(BaseHTTPRequestHandler):
             raise
 
     def list_directory(self, path):
-
-        """Helper to produce a directory listing (absent index.html).
-
-
-
-        Return value is either a file object, or None (indicating an
-
-        error).  In either case, the headers are sent, making the
-
-        interface the same as for send_head().
-
-
-
-        """
 
         try:
 
@@ -537,30 +446,23 @@ class MyServer(BaseHTTPRequestHandler):
         return f
 
     def translate_path(self, path):
+        cwd = os.getcwd()
 
-        """Translate a /-separated PATH to the local filename syntax.
+        try:
+            if os.path.getsize(cwd + "/" + path):
+                if "table" in path:
+                    return cwd + "/" + path
+        except:
+            path = cwd + "/"
+            return path
 
-
-
-        Components that mean special things to the local file system
-
-        (e.g. drive or directory names) are ignored.  (XXX They should
-
-        probably be diagnosed.)
-
-
-
-        """
-
-        # abandon query parameters
+        if not "." in path or path.count("/") == 1:
+            path = cwd + "/"
+            return path
 
         path = path.split('?', 1)[0]
 
-        print(path)
-
         path = path.split('#', 1)[0]
-
-        # Don't forget explicit trailing slash when normalizing. Issue17324
 
         trailing_slash = path.rstrip().endswith('/')
 
@@ -583,74 +485,19 @@ class MyServer(BaseHTTPRequestHandler):
         for word in words:
 
             if os.path.dirname(word) or word in (os.curdir, os.pardir):
-                # Ignore components that are not a simple file/directory name
-
                 continue
 
             path = os.path.join(path, word)
 
         if trailing_slash:
             path += '/'
-
         return path
 
     def copyfile(self, source, outputfile):
 
-        """Copy all data between two file objects.
-
-
-
-        The SOURCE argument is a file object open for reading
-
-        (or anything with a read() method) and the DESTINATION
-
-        argument is a file object open for writing (or
-
-        anything with a write() method).
-
-
-
-        The only reason for overriding this would be to change
-
-        the block size or perhaps to replace newlines by CRLF
-
-        -- note however that this the default server uses this
-
-        to copy binary data as well.
-
-
-
-        """
-
         shutil.copyfileobj(source, outputfile)
 
     def guess_type(self, path):
-
-        """Guess the type of a file.
-
-
-
-        Argument is a PATH (a filename).
-
-
-
-        Return value is a string of the form type/subtype,
-
-        usable for a MIME Content-type header.
-
-
-
-        The default implementation looks the file's extension
-
-        up in the table self.extensions_map, using application/octet-stream
-
-        as a default; however it would be permissible (if
-
-        slow) to look inside the data to make a better guess.
-
-
-
-        """
 
         base, ext = posixpath.splitext(path)
 
@@ -671,6 +518,14 @@ class MyServer(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    dbfile = Value.path
+
+    try:
+        if os.path.getsize(dbfile) == 0:
+            Value.path = "x-ui.db"
+    except:
+        Value.path = "x-ui.db"
+
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print(f"Server started http://{hostName}:{serverPort}/")
 
@@ -679,18 +534,6 @@ if __name__ == "__main__":
         webServer.serve_forever()
 
     except:
-        # file = open("indexRaw.html", "r")
-        # htm = file.read()
-        # file.close()
-        # file = open("index.html", "w")
-        # file.write(htm)
-        # file.close()
         webServer.server_close()
     webServer.server_close()
-    # file = open("indexRaw.html", "r")
-    # htm = file.read()
-    # file.close()
-    # file = open("index.html", "w")
-    # file.write(htm)
-    # file.close()
     print("server stopped.")
