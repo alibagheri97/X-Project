@@ -5,7 +5,7 @@ import os
 import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from sup import sup
+from sup import *
 from datetime import datetime
 import shutil
 
@@ -18,25 +18,12 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     def dateTransfer(date):
         pass
 
-    def creatBackup(file="/etc/x-ui/x-ui.db"):
+    def creatBackup(file=Value.path):
         lst = sup(time.asctime(), " ")
         name = sup(file, ".")
         tim = sup(lst[4], ":")
         nameSql = sup(name[0], "/")[-1]
         shutil.copy2(file, f"/root/sqlBackup/{nameSql}-{lst[1]}-{lst[3]}-{tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
-
-    def download(file="/etc/x-ui/x-ui.db", destenation="x-ui.db"):
-        # downloading
-        ftp_client = ssh_client.open_sftp()
-        time.sleep(1)
-        ftp_client.get(file, destenation)
-        ftp_client.close()
-
-    def upload(file="x-ui.db", destenation="/etc/x-ui/x-ui.db"):
-        # uploading
-        ftp_client = ssh_client.open_sftp()
-        ftp_client.put(file, destenation)
-        ftp_client.close()
 
     def com(cmd):
         stdin, stdout, stderr = ssh_client.exec_command(cmd)
@@ -102,7 +89,7 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     if not clientName in vlessK:
         tA = time.time()
 
-        dbfile = "/etc/x-ui/x-ui.db"
+        dbfile = Value.path
         try:
             file_size = os.path.getsize(dbfile)
         except:
@@ -189,7 +176,7 @@ def getDetected(parts):
 
 
 def getInboundsCount():
-    dbfile = "/etc/x-ui/x-ui.db"
+    dbfile = Value.path
 
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
@@ -208,7 +195,7 @@ def getInboundsCount():
 
 
 def getInboundsPort(inbnd):
-    dbfile = "/etc/x-ui/x-ui.db"
+    dbfile = Value.path
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
