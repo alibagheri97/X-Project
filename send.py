@@ -22,7 +22,6 @@ from main import addClient, getDetected, getInboundsCount
 import json
 import qrcode
 from sup import *
-from sup import pickTag
 
 
 def inboundSetup(htm):
@@ -87,13 +86,13 @@ def intialSetup():
 
 
 def write(fname, content):
-    file = open(fname, "w")
+    file = open(fname, "w", encoding="utf8")
     byt = file.write(content)
     file.close()
 
 
 def read(fname):
-    file = open(fname, "r")
+    file = open(fname, "r", encoding="utf8")
     f = file.read()
     file.close()
     return f
