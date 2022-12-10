@@ -4,6 +4,7 @@ class Value:
     go = ""
     path = "/etc/x-ui/x-ui.db"
 
+
 def sup(data, by):
     a = 0
     b = 0
