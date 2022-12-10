@@ -177,7 +177,6 @@ def getDetected(parts):
 
 def getInboundsCount():
     dbfile = Value.path
-
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
