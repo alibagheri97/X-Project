@@ -455,7 +455,7 @@ class MyServer(BaseHTTPRequestHandler):
             path = cwd + "/"
             return path
 
-        if not "." in path or path.count("/") == 1:
+        if not "." in path or (path.count("/") == 1 and not "jpg" in path):
             path = cwd + "/"
             return path
 
