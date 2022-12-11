@@ -1,6 +1,5 @@
-from sup import sup
+from sup import sup, read, write, findElement
 import os
-from send import write, read
 import argparse
 
 parser = argparse.ArgumentParser()
