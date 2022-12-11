@@ -2,7 +2,7 @@
 
 cur_dir=$(pwd)
 
-sudo apt update && apt install python3-pip && pip install python-dateutil && pip install qrcode && sleep 2
+sudo apt update && apt install python3-pip && pip install python-dateutil && pip install qrcode && pip install Image && sleep 2
 
 echo "Your Panel Ip: "
 read ip
