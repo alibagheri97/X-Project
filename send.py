@@ -86,19 +86,6 @@ def intialSetup():
     write("indexRaw.html", htm)
 
 
-def write(fname, content):
-    file = open(fname, "w", encoding="utf8")
-    byt = file.write(content)
-    file.close()
-
-
-def read(fname):
-    file = open(fname, "r", encoding="utf8")
-    f = file.read()
-    file.close()
-    return f
-
-
 def makeQr(key):
     img = qrcode.make(key)
     img.save('qr.jpg')
