@@ -19,6 +19,19 @@ def sup(data, by):
     return c
 
 
+def write(fname, content):
+    file = open(fname, "w", encoding="utf8")
+    byt = file.write(content)
+    file.close()
+
+
+def read(fname):
+    file = open(fname, "r", encoding="utf8")
+    f = file.read()
+    file.close()
+    return f
+
+
 def findElement(data, find):
     step = find.__len__()
     lstStp = 0
