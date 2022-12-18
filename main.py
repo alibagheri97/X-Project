@@ -8,6 +8,7 @@ from dateutil.relativedelta import relativedelta
 from sup import *
 from datetime import datetime
 import shutil
+from time import strptime
 
 
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
