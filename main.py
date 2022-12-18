@@ -10,6 +10,7 @@ import datetime
 import shutil
 from time import strptime
 
+
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     dic = json.load(open("settings.json", "r"))
     hostIp = dic["host"][0][host]
@@ -181,6 +182,19 @@ def getDetected(parts):
         return dic
     except:
         return None
+
+
+def checkNone():
+    dbfile = Value.path
+    con = sqlite3.connect(dbfile)
+    cur = con.cursor()
+    inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
+    for i in range(len(inbnd_list)):
+        if None in inbnd_list[i]:
+            cur.execute(f"DELETE FROM inbounds WHERE id='{inbnd_list[i][0]}'")
+            con.commit()
+    cur.close()
+    con.close()
 
 
 def getInboundsCount():
