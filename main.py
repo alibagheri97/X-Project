@@ -6,10 +6,9 @@ import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from sup import *
-from datetime import datetime
+import datetime
 import shutil
 from time import strptime
-
 
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     dic = json.load(open("settings.json", "r"))
@@ -55,8 +54,8 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
             totalGB = "0"
         if expTime != "":
             lst = sup(expTime, "-")
-            dt = datetime(int(lst[0]), int(lst[1]), int(lst[-1]))
-            epoch_time = datetime(1970, 1, 1, 0, 0, 0)
+            dt = datetime.datetime(int(lst[0]), int(lst[1]), int(lst[-1]))
+            epoch_time = datetime.datetime(1970, 1, 1, 0, 0, 0)
             delta = (dt - epoch_time)
             tlst = sup(str(time.time()), ".")
             expireTime = int(str(int(delta.total_seconds()) - 12600) + f"{tlst[1][0]}{tlst[1][1]}{tlst[1][2]}")
