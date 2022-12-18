@@ -26,9 +26,9 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
                 tim = sup(i, ":")
                 break
         for i in lst[1:]:
-            if i.__len__()==2:
+            if i.__len__() == 2:
                 day = i
-            elif i.__len__()==3:
+            elif i.__len__() == 3:
                 month = i
         nameSql = sup(name[0], "/")[-1]
         shutil.copy2(file, f"/root/sqlBackup/{nameSql}-{month}-{day}-{tim[0]}{tim[1]}{tim[2]}.{name[-1]}")
@@ -55,10 +55,10 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
         if expTime != "":
             lst = sup(expTime, "-")
             dt = datetime(int(lst[0]), int(lst[1]), int(lst[-1]))
-            epoch_time = datetime(1970, 1, 1)
+            epoch_time = datetime(1970, 1, 1, 0, 0, 0)
             delta = (dt - epoch_time)
             tlst = sup(str(time.time()), ".")
-            expireTime = int(str(int(delta.total_seconds())) + f"{tlst[1][0]}{tlst[1][1]}{tlst[1][2]}")
+            expireTime = int(str(int(delta.total_seconds()) - 12600) + f"{tlst[1][0]}{tlst[1][1]}{tlst[1][2]}")
         else:
             expireTime = '""'
 
