@@ -76,8 +76,8 @@ def add2Tag(data, id, element, value):
         return None
 
 
-def insert2Tag(data, id, tag):
-    pt = pickTag(data, id)
+def insert2Tag(data, id, tag, mode="all"):
+    pt = pickTag(data, id, mode=mode)
     if pt[0]:
         idx = pt[-1]
         if data[idx[-1] - 1] == ">":
