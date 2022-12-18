@@ -80,6 +80,7 @@ def ipcountSetup(htm):
 
 
 def intialSetup():
+    checkNone()
     Value.dic = json.load(open("settings.json", "r"))
     htm = read("indexInit.html")
     htm = ipcountSetup(htm)
