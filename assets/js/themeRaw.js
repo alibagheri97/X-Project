@@ -1,11 +1,8 @@
 (function() {
   "use strict"; // Start of use strict
-
   var sidebar = document.querySelector('.sidebar');
   var sidebarToggles = document.querySelectorAll('#sidebarToggle, #sidebarToggleTop');
-  
   if (sidebar) {
-    
     var collapseEl = sidebar.querySelector('.collapse');
     var collapseElementList = [].slice.call(document.querySelectorAll('.sidebar .collapse'))
     var sidebarCollapseList = collapseElementList.map(function (collapseEl) {
@@ -30,7 +27,7 @@
     // Close any open menu accordions when window is resized below 768px
     window.addEventListener('resize', function() {
       var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-
+        
       if (vw < 768) {
         for (var bsCollapse of sidebarCollapseList) {
           bsCollapse.hide();
@@ -72,9 +69,11 @@
       }
     });
   }
+    
+  sidebarToggles[1].click()
+    
 
 })(); // End of use strict
-
 
 function fallbackCopyTextToClipboard(text) {
   var textArea = document.createElement("textarea");
@@ -117,6 +116,29 @@ function myFunction() {
 
 
   }
+
+function search() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("searchInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("dataTable");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
 
 function check(id){
     // var a = document.getElementsByName("bt11")[0].style;
