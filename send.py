@@ -22,6 +22,8 @@ from main import addClient, getDetected, getInboundsCount
 import json
 import qrcode
 from sup import *
+from datetime import date
+from time import strptime
 
 
 def inboundSetup(htm):
@@ -71,6 +73,91 @@ def inboundSetup(htm):
     return htm
 
 
+def tableSetup(htm):
+    dbfile = Value.path
+    con = sqlite3.connect(dbfile)
+    cur = con.cursor()
+    traffic_list = [a for a in cur.execute("SELECT * FROM client_traffics")]
+    cur.close()
+    con.close()
+    lstOut = []
+    keysLst = ["_", "id", "enable", "name", "up", "down", "exp", "total"]
+    for i in traffic_list:
+        dic = dict()
+        for j in range(len(keysLst)):
+            if keysLst[j] == "_":
+                continue
+            dic[keysLst[j]] = i[j]
+        lstOut.append(dic)
+
+    element = '\n<tr style="color: {5};font-weight: bold;">\n' \
+              '    <td>{0}</td>\n' \
+              '    <td>{1}</td>\n' \
+              '    <td>{2}</td>\n' \
+              '    <td>{3}</td>\n' \
+              '    <td>{4}</td>\n' \
+              '</tr>'
+    modeLst = ["Expired", "Enable", "Disable", "Admin", "Data Exceeded", "Expire Soon"]
+    modeVal = ["rgb(255,0,77)", "rgb(0,200,8)", "rgb(0,0,0)", "rgb(89,94,210)", "rgb(176,176,176)", "rgb(214,209,93)"]
+    mode = dict.fromkeys(modeLst)
+    for i in range(modeLst.__len__()):
+        mode[modeLst[i]] = modeVal[i]
+    for i in lstOut:
+        id, enable, name, up, down, exp, total = list(i.values())
+        totalLeft = total - (up + down)
+        if totalLeft < 0:
+            totalLeft = 0
+        enable, exp, totalLeft = enableMode(enable, exp, totalLeft)
+        htm = insert2Tag(htm, "<tbody", element.format(name, enable, id, totalLeft, exp, mode[enable]), mode="+")
+    return htm
+
+
+def enableMode(enable, exp, total):
+    total = str(total / (1.073741824 * 10 ** 9)) + "0"
+    total = sup(total, ".")
+    total = f"{total[0]}.{total[1][:2]}"
+    if enable == 1:
+        if exp == 0:
+            enable = "Admin"
+            exp = "0/0/0"
+        else:
+            if int(str(exp)[:-3]) - int(time.time()) < 7 * (24 * 60 * 60):
+                enable = "Expire Soon"
+                exp = ctime(exp)
+            else:
+                enable = "Enable"
+                exp = ctime(exp)
+    elif enable == 0:
+        if int(time.time()) < int(str(exp)[:-3]):
+            if float(total) < 1000.0:
+                enable = "Data Exceeded"
+                exp = ctime(exp)
+            else:
+                enable = "Disable"
+                exp = ctime(exp)
+        else:
+            enable = "Expired"
+            exp = ctime(exp)
+
+    return enable, exp, total
+
+
+def ctime(t):
+    tt = time.ctime(float(f"{str(t)[:-3]}.{str(t)[-3:]}"))
+    tt = sup(tt, " ")
+    if tt.__len__() == 6:
+        day = tt[3]
+    else:
+        day = tt[2]
+    month = month2int(tt[1])
+    year = tt[-1]
+    return f"{year}/{month}/{day}"
+
+
+def month2int(txt):
+    return strptime(f'{txt}', '%b').tm_mon
+
+
 def ipcountSetup(htm):
     htm = tagChange(htm, 'name="ipc"', "max", int(Value.dic["maxIpDefult"]))
     htm = tagChange(htm, 'name="ipc"', "value=", int(Value.dic["ipCountDefult"]))
@@ -84,6 +171,9 @@ def intialSetup():
     htm = ipcountSetup(htm)
     htm = inboundSetup(htm)
     write("indexRaw.html", htm)
+    htm = read("rawTable.html")
+    htm = tableSetup(htm)
+    write("table.html", htm)
 
 
 def makeQr(key):
