@@ -42,7 +42,7 @@ def inboundSetup(htm):
         htm = insert2Tag(htm, 'name="hosts"', val)
     for i in list(range(inbnd_count.__len__()))[::-1]:
         on = ""
-        _, secur, _ = getInboundsInfo(inbnd_count[i])
+        _, secur, _ = getInboundsInfo(i)
         if secur == "tls":
             bgA = "rgb(210,232,76)"
         else:
@@ -67,7 +67,7 @@ def inboundSetup(htm):
         if inbnd_count[i] == "y":
             js += f"\n    if (id == '{i + 1}')" + "{\n    " + f"document.getElementById('inbound').value = '{i + 1}';\n    "
             for j in range(inbnd_count.__len__()):
-                _, secur, _ = getInboundsInfo(inbnd_count[i])
+                _, secur, _ = getInboundsInfo(j)
                 if secur == "tls":
                     bgA = "rgb(210,232,76)"
                 else:
