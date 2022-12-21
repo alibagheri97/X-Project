@@ -226,7 +226,7 @@ def getInboundsInfo(inbnd):
     inbnd_port = inbnd_list[inbnd][9]
     secur = json.loads(inbnd_list[inbnd][-3])["security"]
     if secur == "tls":
-        path = json.loads(inbnd_list[0][-3])["wsSettings"]["path"]
+        path = json.loads(inbnd_list[inbnd][-3])["wsSettings"]["path"]
     else:
         path = "/"
     cur.close()
