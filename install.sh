@@ -2,7 +2,7 @@
 
 cur_dir=$(pwd)
 
-sudo apt update && apt install python3-pip && pip install python-dateutil && pip install qrcode && pip install Image && sleep 2
+sudo apt update && apt install python3-pip && pip install python-dateutil && pip install qrcode && pip install Image && pip install selenium && sleep 2
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt-get install -f
