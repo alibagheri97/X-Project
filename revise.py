@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 def revise(index, iport="localhost:9999", usr="admin", pas="admin"):
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
+    options.add_argument('--no-sandbox')
     driver = webdriver.Chrome(options=options)
     driver.get(f"http://{iport}/xui/inbounds/")
 
