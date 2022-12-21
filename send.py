@@ -33,16 +33,24 @@ def inboundSetup(htm):
     inbnd_count = getInboundsCount()
     htm2 = read("assets/js/themeRaw.js")
     loc = findElement(htm2, "$")[-1]
-    bgA = "rgb(78,115, 223)"
-    colA = "rgb(255,255, 255)"
-    bgD = "rgb(234,234,234)"
-    colD = "rgb(72,65,65)"
+
     js = ""
     for i in hostName:
         val = f'<option value="{i}" selected="">{i}</option>'
         htm = insert2Tag(htm, 'name="hosts"', val)
     for i in list(range(inbnd_count.__len__()))[::-1]:
         on = ""
+        _, secur, _ = getInboundsInfo(inbnd_count[i])
+        if secur == "tls":
+            bgA = "rgb(210,232,76)"
+            colA = "rgb(210,232,76)"
+            bgD = "rgb(210,232,76)"
+            colD = "rgb(210,232,76)"
+        else:
+            bgA = "rgb(78,115, 223)"
+            colA = "rgb(255,255, 255)"
+            bgD = "rgb(234,234,234)"
+            colD = "rgb(72,65,65)"
         if not inbnd_count[i] == "y":
             on = "opacity: 0.30;"
         if i + 1 == inbndDf:
