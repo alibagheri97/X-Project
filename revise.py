@@ -59,31 +59,18 @@ def revise(index, iport="localhost:9999", usr="axin1314", pas="axin1314"):
         driver.execute_script(f"dbInbound = app.dbInbounds[{index}];")
 
         data = "data = { " \
-
                "    up: dbInbound.up," \
-
                "    down: dbInbound.down," \
-
                "    total: dbInbound.total," \
-
                "    remark: dbInbound.remark," \
-
                "    enable: dbInbound.enable," \
-
                "    expiryTime: dbInbound.expiryTime," \
-
                "    listen: inbound.listen," \
-
                "    port: inbound.port," \
-
                "    protocol: inbound.protocol," \
-
                "    settings: inbound.settings.toString()," \
-
                "    streamSettings: inbound.stream.toString()," \
-
                "    sniffing: inbound.canSniffing() ? inbound.sniffing.toString(): '{}'," \
-
                "};"
 
         driver.execute_script(data)
