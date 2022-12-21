@@ -15,5 +15,6 @@
     "ipCountDefult": "3",
     "maxIpDefult": "8",
     "dateDefult": "1",
-    "inbndDefult": "1"
+    "inbndDefult": "1",
+    "ExpireDay": "7"
 }
