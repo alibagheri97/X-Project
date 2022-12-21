@@ -33,7 +33,9 @@ def inboundSetup(htm):
     inbnd_count = getInboundsCount()
     htm2 = read("assets/js/themeRaw.js")
     loc = findElement(htm2, "$")[-1]
-
+    colA = "rgb(255,255, 255)"
+    bgD = "rgb(234,234,234)"
+    colD = "rgb(72,65,65)"
     js = ""
     for i in hostName:
         val = f'<option value="{i}" selected="">{i}</option>'
@@ -43,14 +45,8 @@ def inboundSetup(htm):
         _, secur, _ = getInboundsInfo(inbnd_count[i])
         if secur == "tls":
             bgA = "rgb(210,232,76)"
-            colA = "rgb(210,232,76)"
-            bgD = "rgb(210,232,76)"
-            colD = "rgb(210,232,76)"
         else:
             bgA = "rgb(78,115, 223)"
-            colA = "rgb(255,255, 255)"
-            bgD = "rgb(234,234,234)"
-            colD = "rgb(72,65,65)"
         if not inbnd_count[i] == "y":
             on = "opacity: 0.30;"
         if i + 1 == inbndDf:
@@ -71,6 +67,12 @@ def inboundSetup(htm):
         if inbnd_count[i] == "y":
             js += f"\n    if (id == '{i + 1}')" + "{\n    " + f"document.getElementById('inbound').value = '{i + 1}';\n    "
             for j in range(inbnd_count.__len__()):
+                _, secur, _ = getInboundsInfo(inbnd_count[i])
+                if secur == "tls":
+                    bgA = "rgb(210,232,76)"
+                else:
+                    bgA = "rgb(78,115, 223)"
+
                 if inbnd_count[i] == "y":
                     if j == i:
                         js += f"document.getElementById('bt{j + 1}').style.background = '{bgA}';\n    " + f"document.getElementById('bt{j + 1}').style.color = '{colA}';\n    "
