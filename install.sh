@@ -22,7 +22,13 @@ read port
 echo "Your x-ui Panel Port: "
 read xui
 
-sudo /bin/python3 insert.py -s "$ip:$port:$xui" && sleep 2
+echo "Your x-ui Panel Username: "
+read xuiUsr
+
+echo "Your x-ui Panel Password: "
+read xuiPass
+
+sudo /bin/python3 insert.py -s "$ip:$port:$xui:$xuiUsr:$xuiPass" && sleep 2
 sudo cp test.service /etc/systemd/system/
 echo "Service Replaced!!"
 sudo mkdir /root/sqlBackup

@@ -10,6 +10,8 @@
     "panelUsr":"admin",
     "panelPass":"admin",
     "xuiPort": "54321",
+    "xuiUsr": "axin1314",
+    "xuiPass": "axin1314",
     "ipCountDefult": "3",
     "maxIpDefult": "8",
     "dateDefult": "1",

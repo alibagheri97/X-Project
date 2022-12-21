@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
-def revise(index, iport="localhost:9999"):
+def revise(index, iport="localhost:9999", usr="admin", pas="admin"):
     options = webdriver.ChromeOptions()
     options.add_argument("headless")
     driver = webdriver.Chrome(options=options)
@@ -15,8 +15,8 @@ def revise(index, iport="localhost:9999"):
     try:
         if not "inbounds" in driver.current_url:
             if "Login" in driver.page_source:
-                driver.find_elements("tag name", "input")[0].send_keys("admin")
-                driver.find_elements("tag name", "input")[1].send_keys("admin")
+                driver.find_elements("tag name", "input")[0].send_keys(usr)
+                driver.find_elements("tag name", "input")[1].send_keys(pas)
                 driver.find_elements("tag name", "button")[0].click()
                 time.sleep(.1)
                 driver.get(f"http://{iport}/xui/inbounds/")

@@ -221,7 +221,7 @@ class MyServer(BaseHTTPRequestHandler):
 
                         if Value.key != "":
                             setQrcode()
-                            revise.revise(int(dic["inbnd"]) - 1, iport=f'{Value.dic["panelIp"]}:{Value.dic["xuiPort"]}')
+                            revise.revise(int(dic["inbnd"]) - 1, iport=f'{Value.dic["panelIp"]}:{Value.dic["xuiPort"]}', usr=Value.dic["xuiUsr"], pas=Value.dic["xuiPass"])
                             time.sleep(1)
                             # save informations
                             info = read("Info.json")
