@@ -12,6 +12,7 @@ sudo mv chromedriver /usr/bin/chromedriver
 sudo chown root:root /usr/bin/chromedriver
 sudo chmod +x /usr/bin/chromedriver
 rm -rf chromedriver_linux64.zip
+rm -rf google-chrome-stable_current_amd64.deb
 
 echo "Your Panel Ip: "
 read ip
