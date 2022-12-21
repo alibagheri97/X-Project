@@ -24,6 +24,7 @@ import qrcode
 from sup import *
 from datetime import date
 from time import strptime
+import revise
 
 
 def inboundSetup(htm):
@@ -71,6 +72,7 @@ def inboundSetup(htm):
     write("assets/js/theme.js", htm2[:loc[0] + 2] + js + "\n }")
     htm = tagChange(htm, 'name="inbnd"', "value", inbndDf)
     return htm
+
 
 def ipcountSetup(htm):
     htm = tagChange(htm, 'name="ipc"', "max", int(Value.dic["maxIpDefult"]))
@@ -219,6 +221,8 @@ class MyServer(BaseHTTPRequestHandler):
 
                         if Value.key != "":
                             setQrcode()
+                            revise.revise(int(dic["inbnd"]) - 1, iport=f'{Value.dic["panelIp"]}:{Value.dic["xuiPort"]}')
+                            time.sleep(1)
                             # save informations
                             info = read("Info.json")
                             if info.__len__() != 4:

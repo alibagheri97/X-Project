@@ -13,8 +13,8 @@ from time import strptime
 
 def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
     dic = json.load(open("settings.json", "r"))
-    hostIp = dic["host"][0][host]
-    ip, port = hostIp, getInboundsPort(int(inbndid) - 1)
+    ip = dic["host"][0][host]
+    port, _, _ = getInboundsInfo(int(inbndid) - 1)
 
     def dateTransfer(date):
         pass
@@ -143,7 +143,11 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
             con.close()
             file_size = os.path.getsize(dbfile)
             if file_size != 0:
-                vlessKey = f"vless://{Uuid}@{ip}:{port}?type=ws&security=none&path=%2F&host={host}#{remark}"
+                _, secur, path = getInboundsInfo(int(inbndid) - 1)
+                if secur == "tls":
+                    vlessKey = f"vless://{Uuid}@{ip}:{port}?type=ws&security=tls&path=%2F{path[1:]}&host={host}&sni={host}#{remark}"
+                else:
+                    vlessKey = f"vless://{Uuid}@{ip}:{port}?type=ws&security=none&path=%2F&host={host}#{remark}"
                 vless = open("vlessKeys.txt", "a")
                 vless.write(vlessKey + "\n")
                 vless.close()
@@ -151,7 +155,6 @@ def addClient(clientName, clientIpCount, expTime, tgb, inbndid, host):
             else:
                 raise RuntimeError("File Size is 0")
             print(f"Script Time : {time.time() - tA}s")
-
             print("adding Client Sucsessfull!!\n")
             print("Vless Key: " + vlessKey)
         else:
@@ -215,15 +218,17 @@ def getInboundsCount():
     return inbnd_count_list
 
 
-def getInboundsPort(inbnd):
+def getInboundsInfo(inbnd):
     dbfile = Value.path
     con = sqlite3.connect(dbfile)
     cur = con.cursor()
     inbnd_list = [a for a in cur.execute("SELECT * FROM inbounds")]
     inbnd_port = inbnd_list[inbnd][9]
+    secur = json.loads(inbnd_list[inbnd][-3])["security"]
+    path = json.loads(inbnd_list[0][-3])["wsSettings"]["path"]
     cur.close()
     con.close()
-    return inbnd_port
+    return inbnd_port, secur, path
 
 
 def tableSetup(htm):

@@ -3,6 +3,15 @@
 cur_dir=$(pwd)
 
 sudo apt update && apt install python3-pip && pip install python-dateutil && pip install qrcode && pip install Image && sleep 2
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+sudo apt-get install -f
+wget https://chromedriver.storage.googleapis.com/108.0.5359.22/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
+sudo mv chromedriver /usr/bin/chromedriver
+sudo chown root:root /usr/bin/chromedriver
+sudo chmod +x /usr/bin/chromedriver
+rm -rf chromedriver_linux64.zip
 
 echo "Your Panel Ip: "
 read ip
@@ -10,7 +19,10 @@ read ip
 echo "Your Panel Port: "
 read port
 
-sudo /bin/python3 insert.py -s "$ip:$port" && sleep 2
+echo "Your x-ui Panel Port: "
+read xui
+
+sudo /bin/python3 insert.py -s "$ip:$port:$xui" && sleep 2
 sudo cp test.service /etc/systemd/system/
 echo "Service Replaced!!"
 sudo mkdir /root/sqlBackup
